@@ -1,0 +1,7 @@
+name: Tests
+version: '${project.version}'
+main: barkbork.tests.Tests
+api-version: 1.18
+prefix: barkbork.tests
+authors: [ barkbork, jakon67 ]
+description: This is an internal tests plugin.
