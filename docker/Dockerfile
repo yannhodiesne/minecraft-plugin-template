@@ -58,7 +58,7 @@ RUN chmod +x /opt/minecraft/docker-entrypoint.sh
 # Install gosu
 RUN set -eux; \
 	apk update; \
-	apk add --no-cache su-exec;
+	apk add --no-cache su-exec bash;
 
 # Entrypoint
 ENTRYPOINT ["/opt/minecraft/docker-entrypoint.sh"]
