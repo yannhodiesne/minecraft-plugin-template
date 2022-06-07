@@ -3,6 +3,7 @@
 ########################################################
 FROM azul/zulu-openjdk-alpine:17-jre AS build
 RUN apk add curl jq
+RUN apk add dos2unix --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
 
 ARG version=1.18.2
 
@@ -12,11 +13,14 @@ ARG version=1.18.2
 ########################################################
 WORKDIR /opt/minecraft
 COPY ./getpaperserver.sh /
-RUN chmod +x /getpaperserver.sh
+RUN dos2unix /getpaperserver.sh && chmod +x /getpaperserver.sh
 RUN /getpaperserver.sh ${version}
 
 # Run paperclip and obtain patched jar
 RUN java -Dpaperclip.patchonly=true -jar /opt/minecraft/paperclip.jar; exit 0
+
+COPY /docker-entrypoint.sh /
+RUN dos2unix /docker-entrypoint.sh
 
 ########################################################
 ############## Running environment #####################
@@ -52,7 +56,7 @@ ENV JAVAFLAGS=$java_flags
 
 WORKDIR /data
 
-COPY /docker-entrypoint.sh /opt/minecraft
+COPY --from=build /docker-entrypoint.sh /opt/minecraft
 RUN chmod +x /opt/minecraft/docker-entrypoint.sh
 
 # Install gosu
@@ -61,4 +65,4 @@ RUN set -eux; \
 	apk add --no-cache su-exec bash;
 
 # Entrypoint
-ENTRYPOINT ["/opt/minecraft/docker-entrypoint.sh"]
+ENTRYPOINT ["bash", "/opt/minecraft/docker-entrypoint.sh"]
