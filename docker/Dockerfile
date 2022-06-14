@@ -5,7 +5,7 @@ FROM azul/zulu-openjdk-alpine:17-jre AS build
 RUN apk add curl jq
 RUN apk add dos2unix --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
 
-ARG version=1.18.2
+ARG version=1.19
 
 
 ########################################################
@@ -32,12 +32,6 @@ WORKDIR /data
 
 # Obtain runable jar from build stage
 COPY --from=build /opt/minecraft/paperclip.jar /opt/minecraft/paperspigot.jar
-
-# Install and run rcon
-ARG RCON_CLI_VER=1.4.8
-ADD https://github.com/itzg/rcon-cli/releases/download/${RCON_CLI_VER}/rcon-cli_${RCON_CLI_VER}_linux_amd64.tar.gz /tmp/rcon-cli.tgz
-RUN tar -x -C /usr/local/bin -f /tmp/rcon-cli.tgz rcon-cli && \
-  rm /tmp/rcon-cli.tgz
 
 # Volumes for the external data (Server, World, Config...)
 VOLUME "/data"

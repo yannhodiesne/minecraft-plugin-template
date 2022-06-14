@@ -3,6 +3,7 @@
     <deployment type="dockerfile">
       <settings>
         <option name="imageTag" value="minecraft-tests:server" />
+        <option name="attachToContainerNeeded" value="true" />
         <option name="containerName" value="minecraft-tests-server" />
         <option name="envVars">
           <list>
